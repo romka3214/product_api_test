@@ -30,11 +30,11 @@ if [ ! -d "vendor/laravel/sail" ]; then
         -v "$(pwd)":/var/www/html \
         -w /var/www/html \
         laravelsail/php84-composer:latest \
-        php artisan sail:install --with=mysql,redis,meilisearch,mailpit,selenium
+        php artisan sail:install --with=mysql,redis,meilisearch
 fi
 
 echo "Билдим контейнеры"
-./vendor/bin/sail pull mysql redis meilisearch mailpit selenium
+./vendor/bin/sail pull mysql redis meilisearch
 ./vendor/bin/sail build
 
 if command -v sudo &>/dev/null; then
