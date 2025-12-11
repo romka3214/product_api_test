@@ -17,7 +17,7 @@ class ProductSeeder extends Seeder
         $categories = Category::factory()->count(50)->create();
         $categoryIds = $categories->pluck('id')->toArray();
 
-        $batchSize = 1000;
+        $batchSize = 5000;
         $totalProducts = 1000000;
         $batches = ceil($totalProducts / $batchSize);
 

@@ -40,7 +40,7 @@ class ProductApiTest extends TestCase
     public function test_returns_paginated_products(): void
     {
         Product::factory()->count(20)->create();
-        sleep(2);
+        sleep(2); // workaround for asynchronous indexing
         $response = $this->getJson('/api/products');
 
         $response->assertOk()
@@ -198,7 +198,7 @@ class ProductApiTest extends TestCase
     public function test_respects_per_page_parameter(): void
     {
         Product::factory()->count(50)->create();
-
+        sleep(3);
         $response = $this->getJson('/api/products?per_page=5');
 
         $response->assertOk()
@@ -336,7 +336,7 @@ class ProductApiTest extends TestCase
 
         $product = Product::factory()->create(['price' => 100, 'category_id' => $category->id]);
         $product->searchable();
-        sleep(1);
+        sleep(3);
         $response = $this->getJson('/api/products?price_from=100&price_to=100');
 
         $response->assertOk()
