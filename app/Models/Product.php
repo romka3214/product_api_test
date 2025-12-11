@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $fillable = [
         'name',
@@ -31,42 +31,44 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function scopeSearch(Builder $query, ?string $search): void
+    /**
+     * Get the indexable data array for the model.
+     */
+    public function toSearchableArray(): array
     {
-        if (!$search) return;
-
-        $query->where('name', 'LIKE', "%{$search}%");
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description ?? '',
+            'price' => (float)$this->price,
+            'rating' => (float)($this->rating ?? 0),
+            'in_stock' => (bool)$this->in_stock,
+            'category_id' => (int)$this->category_id,
+            'created_at' => $this->created_at?->timestamp,
+        ];
     }
 
-    public function scopePriceBetween(Builder $query, ?float $from, ?float $to): void
+    /**
+     * Modify the query used to retrieve models when making all searchable.
+     */
+    protected function makeAllSearchableUsing($query)
     {
-        if ($from !== null) {
-            $query->where('price', '>=', $from);
-        }
-
-        if ($to !== null) {
-            $query->where('price', '<=', $to);
-        }
+        return $query->with('category');
     }
 
-    public function scopeInCategory(Builder $query, ?int $categoryId): void
+    public function searchableOptions(): array
     {
-        if ($categoryId) {
-            $query->where('category_id', $categoryId);
-        }
-    }
-
-    public function scopeAvailable(Builder $query, ?bool $inStock): void
-    {
-        if ($inStock !== null) {
-            $query->where('in_stock', $inStock);
-        }
-    }
-
-    public function scopeMinRating(Builder $query, ?float $rating): void
-    {
-        if ($rating !== null) {
-            $query->where('rating', '>=', $rating);
-        }
+        return [
+            'sortableAttributes' => [
+                'id',
+                'name',
+                'description',
+                'price',
+                'rating',
+                'in_stock',
+                'category_id',
+                'created_at',
+            ],
+        ];
     }
 }
