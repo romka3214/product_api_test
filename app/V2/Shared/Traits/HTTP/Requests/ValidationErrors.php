@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\V2\Shared\Traits\HTTP\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-abstract class ApiFormRequest extends FormRequest
+trait ValidationErrors
 {
     protected function failedValidation(Validator $validator): void
     {

@@ -1,6 +1,2 @@
 <?php
-
-use App\Http\Controllers\ProductController;
-use Illuminate\Support\Facades\Route;
-
-Route::get('products', [ProductController::class, 'index']);
+require app_path('V2/Products/Presentation/Http/routes.php');

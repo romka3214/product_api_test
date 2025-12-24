@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Artisan;
-use Laravel\Scout\EngineManager;
 use Tests\TestCase;
 
 class ProductApiTest extends TestCase
@@ -21,7 +19,6 @@ class ProductApiTest extends TestCase
         $params = [
             'id',
             'name',
-            'description',
             'price',
             'rating',
             'in_stock',
@@ -29,7 +26,10 @@ class ProductApiTest extends TestCase
             'created_at'
         ];
         $index = $client->index('test_products');
-        $index->deleteAllDocuments();
+
+        $task = $index->deleteAllDocuments();
+        $client->waitForTask($task['taskUid']);
+
         $index->updateSettings([
             'sortableAttributes' => $params,
             'filterableAttributes' => $params,

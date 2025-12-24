@@ -29,7 +29,6 @@ class MeilisearchInit extends Command
         $params = [
             'id',
             'name',
-            'description',
             'price',
             'rating',
             'in_stock',

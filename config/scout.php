@@ -143,7 +143,7 @@ return [
             \App\Models\Product::class => [
                 'filterableAttributes' => ['price', 'rating', 'in_stock', 'category_id', 'created_at'],
                 'sortableAttributes' => ['price', 'rating', 'created_at'],
-                'searchableAttributes' => ['name', 'description'],
+                'searchableAttributes' => ['name'],
             ],
         ],
     ],

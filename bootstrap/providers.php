@@ -1,5 +1,5 @@
 <?php
 
 return [
-    App\Providers\AppServiceProvider::class,
+    App\V2\Products\Infrastructure\Providers\ProductServiceProvider::class,
 ];
